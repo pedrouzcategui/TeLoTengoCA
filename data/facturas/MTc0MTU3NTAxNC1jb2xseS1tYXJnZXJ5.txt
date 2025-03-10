@@ -1,0 +1,9 @@
+Fecha: 2025/03/09
+Vendedor: COLLY MARGERY
+
+------------------------DESGLOSE-------------------------------
+ID Item     Nombre      Cantidad       Precio      SubTotal
+1000     PRODUCTO_1000      1          1600.0     $1600.0
+-------------------------------------------------------------------
+Total de factura:  $1600.0
+
