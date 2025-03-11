@@ -29,7 +29,7 @@ El proyecto está organizado en varios paquetes y archivos, cada uno con una res
 
 ## Requisitos del Sistema
 
-- **Java**: JDK 8 o superior.
+- **Java**: JDK 23 o superior.
 - **NetBeans**: IDE recomendado para el desarrollo y la gestión del proyecto.
 
 ## Instrucciones de Instalación
