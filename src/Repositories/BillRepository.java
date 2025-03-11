@@ -44,21 +44,24 @@ public class BillRepository implements Repository<Bill> {
 
     private static final CSVReader<Bill> csvReader = new CSVReader<>(FILE_NAME, billMapper, ";");
 
+    // Funcion que obtiene todas las facturas del CSV como objetos de tipo Bill
     @Override
     public List<Bill> getAll() {
         return csvReader.getAll();
     }
     
+    // Funcion para obtener el numero de filas del CSV
     public int getSize(){
         return this.getAll().size();
     }
     
-    // GetBillsByEmployeeId
+    // Obtiene las facturas de un vendedor determinado
     public List<Bill> getBillsByEmployeeId(int employeeId){
         return csvReader.getAll().stream()
                 .filter(bill -> bill.getSalesmanId() == employeeId).toList();
     }
 
+    // Obtiene una factura por su ID
     @Override
     public Optional<Bill> findById(int id) {
         return csvReader.getAll().stream()
@@ -75,15 +78,18 @@ public class BillRepository implements Repository<Bill> {
         csvReader.writeToCSV(employees, billConverter);
     }
     
+    // Funcion de tipo utility que se usa para obtener el total de una factura.
     public double getBillTotal(int billId) {
+        
         double total = 0.0;
 
+        // Se instancian los repositorios que se encargan de los metodos de guardado de datos
         BillDetailRepository billDetailRepository = new BillDetailRepository();
         ProductRepository productRepository = new ProductRepository();
-        // 1. Get all BillDetail records for the given Bill ID
+        // Se obtiene la factura por su ID
         List<BillDetail> billDetails = billDetailRepository.getBillDetailsByBillId(billId);
 
-        // 2. Sum up each line: price * quantity (or adapt to your actual fields)
+        // Se suman los precios del producto y se multiplican por sus cantidades
         for (BillDetail detail : billDetails) {
             Optional<Product> product = productRepository.findById(detail.getItemId());
             double linePrice = product.get().getPrice();
@@ -95,22 +101,25 @@ public class BillRepository implements Repository<Bill> {
     }
 
     public void addToBillsFolder(Bill newBill) {
-    // Repositories used to fetch BillDetail and Product information
+    // Se instancian los repositorios necesarios para la creacion de la factura
     BillDetailRepository billDetailRepo = new BillDetailRepository();
     ProductRepository productRepo = new ProductRepository();
     EmployeeRepository employeeRepo = new EmployeeRepository();
     
-    // 1. Retrieve all BillDetail records associated with this Bill
+    // Se obtienen todos los DetalleFactura asociados a la Factura.
     List<BillDetail> billDetails = billDetailRepo.getBillDetailsByBillId(newBill.getId());
     
-    // 2. Build the text content for the bill file
+    // Usamos la clase StringBuilder para poder crear el archivo
     StringBuilder sb = new StringBuilder();
+    // Se obtiene el nombre del empleado
     String employeeName = employeeRepo.findById(newBill.getSalesmanId()).get().getName();
+    // Se formatea el nombre del empleado para el archivo
     String employeeNameFormatted = String.join("-",employeeName.toLowerCase().split(" "));
     
-    // Write the heading with date and salesman
+    // Header de la factura
     sb.append("Fecha: ").append(newBill.getBillDateAsString()).append("\n");
     sb.append("Vendedor: ").append(employeeName).append("\n\n");
+    sb.append("Razon Social: ").append("TeLoTengo C.A").append("\n\n");
     sb.append("------------------------DESGLOSE-------------------------------\n");
     
     sb.append("ID Item").append("     ")
@@ -121,7 +130,7 @@ public class BillRepository implements Repository<Bill> {
     
     double total = 0.0;
     
-    // 3. For each BillDetail, retrieve Product, calculate subtotals, etc.
+    // Calcula subtotales de cada DetalleFactura
     for (BillDetail detail : billDetails) {
         Optional<Product> productOpt = productRepo.findById(detail.getItemId());
         if (productOpt.isPresent()) {
@@ -129,8 +138,8 @@ public class BillRepository implements Repository<Bill> {
             double lineSubtotal = product.getPrice() * detail.getQuantitySold();
             total += lineSubtotal;
             
-            // Example line format:
-            // itemId    itemName    quantity    price    $subtotal
+            // Formato de la linea
+            // id    producto    cantidad     precio    subtotal
             sb.append(detail.getItemId()).append("     ")
               .append(product.getName()).append("      ")
               .append(detail.getQuantitySold()).append("          ")
@@ -140,20 +149,23 @@ public class BillRepository implements Repository<Bill> {
     }
     
     sb.append("-------------------------------------------------------------------\n");
-    sb.append("Total de factura:  $").append(total).append("\n");
+    sb.append("Total de factura:                        $").append(total).append("\n");
     
-    // 4. Create the "data/facturas/" folder if it does not exist and write the file
-    long unixTime = System.currentTimeMillis() / 1000L; // seconds-based timestamp
+    // Se toma el milisegundo de unix para asegurarnos que los archivos sean unicos
+    long unixTime = System.currentTimeMillis() / 1000L;
+    // Se crea o sobreescribe la carpeta facturas
     File folder = new File("data/facturas");
+    // Si no existe el folder, se crea
     if (!folder.exists()) {
         folder.mkdirs();
     }
     
-    // 5. Build the file name using unix timestamp and salesmanName
-    //    e.g. "1696893712-Pedro_Uzcategui.txt"
+    // 5. Se crea el nombre del archivo, y luego se cirfa.
+    // e.g. "1696893712-Pedro_Uzcategui.txt"
     String filename = unixTime + "-" + employeeNameFormatted;
     File outputFile = new File(folder, Cypher.encrypt(filename) + ".txt");
     
+    // Se genera el archivo de salida y se cierra el writer.
     try (PrintWriter writer = new PrintWriter(outputFile)) {
         writer.println(sb.toString());
         writer.flush();

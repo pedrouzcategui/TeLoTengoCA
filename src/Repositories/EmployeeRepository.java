@@ -35,11 +35,24 @@ public class EmployeeRepository implements Repository<Employee> {
 
     private static final CSVReader<Employee> csvReader = new CSVReader<>(FILE_NAME, employeeMapper, ";");
 
+    /**
+     * Devuelve todos los empleados del CSV
+     * @return List<Employee>
+     */
+    
     @Override
     public List<Employee> getAll() {
         return csvReader.getAll();
     }
 
+    /**
+     * 
+     * @param id
+     * @return Optional<Employee>
+     * 
+     * Devuelve un objeto de empleado si lo consigue, sino devuelve null
+     */
+    
     @Override
     public Optional<Employee> findById(int id) {
         return getAll().stream()
@@ -47,12 +60,23 @@ public class EmployeeRepository implements Repository<Employee> {
                 .findFirst();
     }
     
+    /**
+     * 
+     * @param username
+     * @return Optional<Employee>
+     * 
+     * Devuelve el objeto usuario (si existe), o null si no lo encuentra.
+     */
+    
     public Optional<Employee> findByUsername(String username){
         return getAll().stream()
                 .filter(employee -> employee.getUsername().equals(username))
                 .findFirst();
     }
     
+    /**
+     * Solo para DEBUG: Imprime todos los username de los empleados
+     */
     public void printAll(){
         List<Employee> employees = getAll();
         for (Employee employee : employees){
@@ -67,33 +91,6 @@ public class EmployeeRepository implements Repository<Employee> {
         List<Employee> employees = getAll();
         employees.add(newEmployee);
         csvReader.writeToCSV(employees, employeeConverter);
-    }
-
-    /**
-     * Edita un empleado del archivo CSV y lo guarda
-     */
-    public boolean update(Employee updatedEmployee) {
-        List<Employee> employees = getAll(); // 1️⃣ Read all employees from CSV
-
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getId() == updatedEmployee.getId()) { // 2️⃣ Find the employee by ID
-                employees.set(i, updatedEmployee); // 3️⃣ Replace the old entry with the new data
-                csvReader.writeToCSV(employees, employeeConverter); // 4️⃣ Write back everything to CSV
-                return true; // ✅ Update was successful
-            }
-        }
-        return false; // ❌ Employee not found
-    }
-
-    public boolean delete(int id) {
-        List<Employee> employees = getAll(); // 1️⃣ Read all employees from CSV
-
-        boolean removed = employees.removeIf(e -> e.getId() == id); // 2️⃣ Remove employee by ID
-
-        if (removed) {
-            csvReader.writeToCSV(employees, employeeConverter); // 3️⃣ Overwrite CSV with updated list
-        }
-        return removed; // ✅ Return true if employee was removed, false otherwise
     }
 
 }

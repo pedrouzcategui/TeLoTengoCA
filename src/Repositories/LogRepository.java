@@ -40,9 +40,9 @@ public class LogRepository implements Repository<Log> {
         return csvReader.getAll();
     }
 
+    // Esta funcion no se necesita para los logs pero esta definida en las interfaces
     @Override
     public Optional<Log> findById(int id) {
-        // Logs typically don't have an ID, so this method might not be applicable
         return Optional.empty();
     }
 

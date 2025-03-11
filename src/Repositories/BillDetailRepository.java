@@ -38,21 +38,24 @@ public class BillDetailRepository implements Repository<BillDetail> {
 
     private static final CSVReader<BillDetail> csvReader = new CSVReader<>(FILE_NAME, billDetailMapper, ";");
 
+    // Aqui es necesario el @override por la implementacion de la interfaz
     @Override
     public List<BillDetail> getAll() {
         return csvReader.getAll();
     }
     
+    // Esto devuelve la longitud de filas en el archivo CSV, lo uso para determinar el ID de la siguiente factura
     public int getSize(){
         return this.getAll().size();
     }
     
-    // Get BillDetailsByBillId
+    // Obtiene los objetos DetalleFactura (BillDetails) asociados con la factura (Bill)
     public List<BillDetail> getBillDetailsByBillId(int billId){
         return csvReader.getAll().stream()
                 .filter(billDetail -> billDetail.getBillId() == billId).toList();
     }
     
+    // Obtiene un DetalleFactura por su ID.
     @Override
     public Optional<BillDetail> findById(int id) {
         return csvReader.getAll().stream()

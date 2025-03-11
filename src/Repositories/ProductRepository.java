@@ -44,19 +44,19 @@ public class ProductRepository implements Repository<Product>  {
     }
 
     /**
-     * Metodo para actualizar productos
+     * Metodo para actualizar productos, necesario para realizar el descuento de productos
      */
     public boolean update(Product updatedProduct){
-        List<Product> products = getAll(); // 1️⃣ Read all products from CSV
+        List<Product> products = getAll(); // Obtener todos los productos del CSV
 
         for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getId() == updatedProduct.getId()) { // 2️⃣ Find the employee by ID
-                products.set(i, updatedProduct); // 3️⃣ Replace the old entry with the new data
-                csvReader.writeToCSV(products, productConverter); // 4️⃣ Write back everything to CSV
-                return true; // ✅ Update was successful
+            if (products.get(i).getId() == updatedProduct.getId()) { // Obtener ID del producto
+                products.set(i, updatedProduct); // Actualizar el producto en la lista
+                csvReader.writeToCSV(products, productConverter); // Volver a escribir el CSV
+                return true;
             }
         }
-        return false; // ❌ Employee not found
+        return false; // No se encontro el producto
     }
 
 }

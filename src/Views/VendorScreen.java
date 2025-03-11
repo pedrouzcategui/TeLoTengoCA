@@ -51,6 +51,7 @@ public class VendorScreen extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setVisible(true);
+        setLocationRelativeTo(null);
 
         // Top Panel
         JPanel topPanel = new JPanel(new FlowLayout());

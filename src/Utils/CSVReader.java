@@ -56,7 +56,7 @@ public class CSVReader<T> {
             String line;
             while((line = reader.readLine()) != null){
                 String[] data = line.split(this.getSeparator());
-                // DEBUGGING ONLY
+                // Solo para hacer debug:
                 //System.out.println("Line Read: " + line);
                 //System.out.println("Split Data Length: " + data.length);
                 //System.out.println("Split Data: " + Arrays.toString(data));
@@ -75,11 +75,11 @@ public class CSVReader<T> {
     public void writeToCSV(List<T> records, RowConverter<T> rowConverter){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(getFullFileNamePath()))) {
             for (T record : records) {
-                writer.write(rowConverter.convertToCSV(record)); // Convert object to CSV format
-                writer.newLine(); // Move to the next line
+                writer.write(rowConverter.convertToCSV(record));
+                writer.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error writing to CSV file: " + getFullFileNamePath(), e);
+            throw new RuntimeException("Error escribiendo en el CSV: " + getFullFileNamePath(), e);
         }
     }
 

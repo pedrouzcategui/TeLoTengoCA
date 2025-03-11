@@ -49,6 +49,7 @@ public class AdminScreen extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setVisible(true);
+        setLocationRelativeTo(null);
 
         // Welcome label
         Employee currentEmployee = AppContext.getInstance().getCurrentEmployee();

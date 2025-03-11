@@ -10,6 +10,9 @@ import Models.Employee;
  *
  * @author pedro
  */
+
+
+// Esta clase aplica el patron de diseño Singleton para persistir la "sesion" del usuario en la app
 public class AppContext {
     private static AppContext instance;
     

@@ -1,3 +1,5 @@
+![Main-Screen](image.png)
+
 # TeLoTengoCA
 
 ## Descripción del Proyecto

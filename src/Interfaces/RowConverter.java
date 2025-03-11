@@ -4,6 +4,8 @@
  */
 package Interfaces;
 
+// Esta interfaz fue creada para implementarse en mis funciones convertToCSV(), lo que hacen
+// es convertir un objeto en una linea csv
 public interface RowConverter<T> {
     String convertToCSV(T obj);
 }
