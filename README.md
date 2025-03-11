@@ -2,6 +2,8 @@
 
 # TeLoTengoCA
 
+GITHUB LINK: https://github.com/pedrouzcategui/TeLoTengoCA
+
 ## Descripción del Proyecto
 
 TeLoTengoCA es una aplicación de gestión de ventas diseñada para facilitar el manejo de productos, facturas y empleados en una tienda. La aplicación permite a los vendedores registrar ventas, gestionar inventarios y generar reportes de ventas.
